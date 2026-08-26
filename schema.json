@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "The name of the company under discussion in this section of the document."
+    },
+    "year": {
+      "type": "number",
+      "description": "The year in which this company's numbers are reported."
+    },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "invoice_number",
+    "total"
+  ]
+}
