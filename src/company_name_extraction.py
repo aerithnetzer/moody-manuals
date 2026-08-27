@@ -23,10 +23,12 @@ def main():
     logger.info(f"Logging to: {LOG_PATH}")
 
     model = InferenceManager(method="hf")
-
+    i = 0
     for batch in batched(os.scandir(DATA_DIR / "raw"), n=8):
         results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
         print(results)
+
+        logger.info(f"Completed iteration {i}")
         
 
 

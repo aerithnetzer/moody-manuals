@@ -1,24 +1,18 @@
 {
   "type": "object",
   "properties": {
-    "company_name": {
-      "type": "string",
-      "description": "The name of the company under discussion in this section of the document."
-    },
-    "year": {
-      "type": "number",
-      "description": "The year in which this company's numbers are reported."
-    },
-    "line_items": {
+    "company_entry": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "The data being stored in the field"
           },
           "amount": {
-            "type": "number"
+            "type": "number",
+            "description": "The amount of money in the report field"
           }
         }
       }
