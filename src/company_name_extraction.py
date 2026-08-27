@@ -6,13 +6,23 @@ from pathlib import Path
 from lift import extract_images
 from lift.model import InferenceManager
 from PIL import Image
+import logging
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-SCHEMA_PATH = Path(__file__).resolve().parent.parent / "schema.json"
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+SCHEMA_PATH = BASE_DIR / "schema.json"
+LOG_PATH = f"{BASE_DIR}/{os.getenv("SLURM_JOB_ID")}"
+logger = logging.getLogger(__name__)
+
 def main():
     
-    model = InferenceManager(method="hf")
+    logging.basicConfig(filename=LOG_PATH)
 
+    logger.info(f"Running compnay extraction on: {DATA_DIR}")
+    logger.info(f"Using schema: {SCHEMA_PATH}")
+    logger.info(f"Logging to: {LOG_PATH}")
+
+    model = InferenceManager(method="hf")
 
     for batch in batched(os.scandir(DATA_DIR / "raw"), n=8):
         results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
