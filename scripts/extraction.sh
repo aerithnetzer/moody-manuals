@@ -8,4 +8,5 @@
 #SBATCH --ntasks-per-node=1     # Number of Cores (Processors)
 #SBATCH --mail-user=aerith.netzer@northwestern.edu
 
+cd ..
 make extractcompanynames
