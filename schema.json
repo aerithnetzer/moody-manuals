@@ -23,9 +23,5 @@
         }
       }
     }
-  },
-  "required": [
-    "invoice_number",
-    "total"
-  ]
+  }
 }
