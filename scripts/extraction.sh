@@ -7,5 +7,6 @@
 #SBATCH --mem=64G               # Memory per node in GB needed for a job. Also see --mem-per-cpu
 #SBATCH --ntasks-per-node=1     # Number of Cores (Processors)
 #SBATCH --mail-user=aerith.netzer@northwestern.edu
+#SBATCH --output logs/
 
 make extractcompanynames
