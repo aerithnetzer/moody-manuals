@@ -26,6 +26,8 @@ def main():
     i = 0
     for batch in batched(os.scandir(DATA_DIR / "raw"), n=8):
         results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
+        with open(DATA_DIR / "extracted_data" / "results.json", "w") as f:
+            f.writelines(str(results))
         print(results)
 
         logger.info(f"Completed iteration {i}")
