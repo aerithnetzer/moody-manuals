@@ -15,7 +15,7 @@ LOG_PATH = BASE_DIR / "logs" / f"{os.getenv("SLURM_JOB_ID")}.log"
 logger = logging.getLogger(__name__)
 
 def main():
-    
+    Path(LOG_PATH).touch()
     logging.basicConfig(filename=LOG_PATH)
 
     logger.info(f"Running compnay extraction on: {DATA_DIR}")
