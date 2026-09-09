@@ -1,6 +1,7 @@
 # This file extracts company names from the pages
 
 from itertools import batched
+import json
 import os
 from pathlib import Path
 from lift import extract_images
@@ -26,11 +27,11 @@ def main():
     i = 0
     for batch in batched(os.scandir(DATA_DIR / "raw"), n=8):
         results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
-        with open(DATA_DIR / "extracted_data" / "results.json", "w") as f:
-            f.writelines(str(results))
-        print(results)
+        with open(DATA_DIR / "extracted_data" / f"results_{i}.json", "w") as f:
+            f.writelines(json.loads(str(results)))
 
         logger.info(f"Completed iteration {i}")
+        i += 1
         
 
 
