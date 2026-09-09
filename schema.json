@@ -6,13 +6,17 @@
       "items": {
         "type": "object",
         "properties": {
+          "comany_name": {
+            "type": "string",
+            "description": "The name of the company in which the line items are attributed. It should include any suffixes, such as inc., co., etc."
+          },
           "description": {
             "type": "string",
-            "description": "The data being stored in the field"
+            "description": "The data being stored in the field. It should not include the company name in the description."
           },
           "amount": {
             "type": "number",
-            "description": "The amount of money in the report field"
+            "description": "The amount of money in the report field. It should not have any commas, nor any currency symbols."
           }
         }
       }
