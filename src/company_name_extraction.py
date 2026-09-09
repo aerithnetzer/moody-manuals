@@ -8,6 +8,7 @@ from lift import extract_images
 from lift.model import InferenceManager
 from PIL import Image
 import logging
+from dataclasses import asdict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
@@ -25,10 +26,10 @@ def main():
 
     model = InferenceManager(method="hf")
     i = 0
-    for batch in batched(os.scandir(DATA_DIR / "raw"), n=2):
+    for batch in batched(os.scandir(DATA_DIR / "raw"), n=1):
         results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
-        with open(DATA_DIR / "extracted_data" / f"results_{i}.json", "w") as f:
-            f.writelines((str(results.extraction)))
+        with open(DATA_DIR / "extracted_data" / f"{batch[0].name}.json", "w") as f:
+            f.writelines(json.dumps(asdict(results), indent=4))
 
         logger.info(f"Completed iteration {i}")
         i += 1
