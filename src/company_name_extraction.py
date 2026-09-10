@@ -9,16 +9,44 @@ from lift.model import InferenceManager
 from PIL import Image
 import logging
 from dataclasses import asdict
+from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 SCHEMA_PATH = BASE_DIR / "schema.json"
 LOG_PATH = BASE_DIR / "logs" / f"{os.getenv("SLURM_JOB_ID")}.log"
+
 logger = logging.getLogger(__name__)
 
 def main():
     Path(LOG_PATH).touch()
     logging.basicConfig(filename=LOG_PATH)
+
+    now = datetime.now()
+    date = now.strftime("%d_%m_%Y")
+    time = now.strftime("%H_%M_%S")
+    
+    EXECUTION_MANIFEST_DIR = DATA_DIR / date / time
+    
+    try:
+        os.makedirs(EXECUTION_MANIFEST_DIR)
+    except Exception as e:
+        raise e
+    
+
+    try:
+        with open(EXECUTION_MANIFEST_DIR / "run_manifest.txt", "w") as f:
+            _ = f.write("\n#\n" * 20)
+            _ = f.write("EXTRACTION SCHEMA")
+            _ = f.write("\n#\n" * 20)
+            _ = f.writelines(json.dumps(json.load(open(SCHEMA_PATH, "r")), indent = 4))
+            _ = f.write("\n#\n" * 20)
+            _ = f.write("END OF SCHEMA")
+            _ = f.write("\n#\n" * 20)
+            _ = f.write("\n#\n" * 20)
+
+    except Exception as e:
+        raise e
 
     logger.info(f"Running compnay extraction on: {DATA_DIR}")
     logger.info(f"Using schema: {SCHEMA_PATH}")
