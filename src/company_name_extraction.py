@@ -62,7 +62,9 @@ def main():
     for p in paths:
         
         results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
-        with open(EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.name.split(".")[0]}.json", "w") as f:
+        result_path = EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.name.split(".")[0]}.json"
+        print(f"Saving to {result_path}")
+        with open(result_path, "w") as f:
             f.writelines(json.dumps(asdict(results), indent=4))
 
         logger.info(f"Completed iteration {i}")
