@@ -24,9 +24,9 @@ def main():
     now = datetime.now()
     date = now.strftime("%d_%m_%Y")
     time = now.strftime("%H_%M_%S")
-    
+    logger.info("Run started on: ", date, ",at time: ", time) 
     EXECUTION_MANIFEST_DIR = DATA_DIR / date / time
-    paths = os.scandir(DATA_DIR / "raw")
+    paths = os.listdir(DATA_DIR / "raw")
     try:
         os.makedirs(EXECUTION_MANIFEST_DIR)
     except Exception as e:
@@ -35,12 +35,12 @@ def main():
     try:
         with open(EXECUTION_MANIFEST_DIR / "run_manifest.txt", "w") as f:
             _ = f.write(("#" * 20 + "\n" ))
-            _ = f.write("EXTRACTION SCHEMA")
+            _ = f.write("EXTRACTION SCHEMA\n")
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.writelines(json.dumps(json.load(open(SCHEMA_PATH, "r")), indent = 4))
             _ = f.write(("#" * 20 + "\n" ))
-            _ = f.write("END OF SCHEMA")
-            _ = f.write(("#" * 20 + "\n" ))
+            _ = f.write("END OF SCHEMA\n")
+            _ = f.write(("#" * 20 + "\n\n\n" ))
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
@@ -60,9 +60,8 @@ def main():
     i = 0
     os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
     for p in paths:
-        
         results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
-        result_path = EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.name.split(".")[0]}.json"
+        result_path = EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.split("/")[0].strip(".png")}.json"
         print(f"Saving to {result_path}")
         with open(result_path, "w") as f:
             f.writelines(json.dumps(asdict(results), indent=4))
