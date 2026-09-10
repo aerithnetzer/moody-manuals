@@ -35,13 +35,13 @@ def main():
 
     try:
         with open(EXECUTION_MANIFEST_DIR / "run_manifest.txt", "w") as f:
-            _ = f.write("#" * 20)
+            _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("EXTRACTION SCHEMA")
-            _ = f.write("#" * 20)
+            _ = f.write(("#" * 20 + "\n" ))
             _ = f.writelines(json.dumps(json.load(open(SCHEMA_PATH, "r")), indent = 4))
-            _ = f.write("#" * 20)
+            _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("END OF SCHEMA")
-            _ = f.write("#" * 20)
+            _ = f.write(("#" * 20 + "\n" ))
 
     except Exception as e:
         raise e
