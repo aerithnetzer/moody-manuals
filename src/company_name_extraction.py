@@ -44,7 +44,7 @@ def main():
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
-            _ = f.writelines(paths)
+            _ = f.writelines([str(p) for p in paths])
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("END OF RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
@@ -58,10 +58,10 @@ def main():
 
     model = InferenceManager(method="hf")
     i = 0
+    os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
     for p in paths:
         
         results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
-        os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
         with open(EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.name.split(".")[0]}.json", "w") as f:
             f.writelines(json.dumps(asdict(results), indent=4))
 
