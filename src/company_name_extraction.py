@@ -1,6 +1,5 @@
 # This file extracts company names from the pages
 
-from itertools import batched
 import json
 import os
 from pathlib import Path
@@ -36,14 +35,13 @@ def main():
 
     try:
         with open(EXECUTION_MANIFEST_DIR / "run_manifest.txt", "w") as f:
-            _ = f.write("\n#\n" * 20)
+            _ = f.write("#" * 20)
             _ = f.write("EXTRACTION SCHEMA")
-            _ = f.write("\n#\n" * 20)
+            _ = f.write("#" * 20)
             _ = f.writelines(json.dumps(json.load(open(SCHEMA_PATH, "r")), indent = 4))
-            _ = f.write("\n#\n" * 20)
+            _ = f.write("#" * 20)
             _ = f.write("END OF SCHEMA")
-            _ = f.write("\n#\n" * 20)
-            _ = f.write("\n#\n" * 20)
+            _ = f.write("#" * 20)
 
     except Exception as e:
         raise e
@@ -54,9 +52,11 @@ def main():
 
     model = InferenceManager(method="hf")
     i = 0
-    for batch in batched(os.scandir(DATA_DIR / "raw"), n=1):
-        results = extract_images(images=[Image.open(p) for p in batch], schema=str(SCHEMA_PATH), model=model)
-        with open(DATA_DIR / "extracted_data" / f"{batch[0].name}.json", "w") as f:
+    for p in os.scandir(DATA_DIR / "raw"):
+        
+        results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
+        os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
+        with open(EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.name.split(".")[0]}.json", "w") as f:
             f.writelines(json.dumps(asdict(results), indent=4))
 
         logger.info(f"Completed iteration {i}")
