@@ -12,7 +12,7 @@
           },
           "description": {
             "type": "string",
-            "description": "The data being stored in the field. It should not include the company name in the description."
+            "description": "The data being stored in the field. It should not include the company name in the description. It should only consist of financial information, such as Total Income, Gross Income, Net Income, Liabilities, Debt, Bonded Debt, et cetera."
           },
           "amount": {
             "type": "number",
