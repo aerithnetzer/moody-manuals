@@ -26,12 +26,11 @@ def main():
     time = now.strftime("%H_%M_%S")
     
     EXECUTION_MANIFEST_DIR = DATA_DIR / date / time
-    
+    paths = os.scandir(DATA_DIR / "raw")
     try:
         os.makedirs(EXECUTION_MANIFEST_DIR)
     except Exception as e:
         raise e
-    
 
     try:
         with open(EXECUTION_MANIFEST_DIR / "run_manifest.txt", "w") as f:
@@ -41,6 +40,13 @@ def main():
             _ = f.writelines(json.dumps(json.load(open(SCHEMA_PATH, "r")), indent = 4))
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("END OF SCHEMA")
+            _ = f.write(("#" * 20 + "\n" ))
+            _ = f.write(("#" * 20 + "\n" ))
+            _ = f.write("RESOURCES PROCESSED IN THIS RUN")
+            _ = f.write(("#" * 20 + "\n" ))
+            _ = f.writelines(paths)
+            _ = f.write(("#" * 20 + "\n" ))
+            _ = f.write("END OF RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
 
     except Exception as e:
@@ -52,7 +58,7 @@ def main():
 
     model = InferenceManager(method="hf")
     i = 0
-    for p in os.scandir(DATA_DIR / "raw"):
+    for p in paths:
         
         results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
         os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
