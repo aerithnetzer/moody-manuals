@@ -12,6 +12,7 @@ from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
+RAW_DATA_DIR = BASE_DIR / "data" / "raw"
 SCHEMA_PATH = BASE_DIR / "schema.json"
 LOG_PATH = BASE_DIR / "logs" / f"{os.getenv("SLURM_JOB_ID")}.log"
 
@@ -26,7 +27,8 @@ def main():
     time = now.strftime("%H_%M_%S")
     logger.info("Run started on: ", date, ",at time: ", time) 
     EXECUTION_MANIFEST_DIR = DATA_DIR / date / time
-    paths = os.listdir(DATA_DIR / "raw")
+
+    absolute_paths = [str(item.resolve()) for item in RAW_DATA_DIR.iterdir()]
     try:
         os.makedirs(EXECUTION_MANIFEST_DIR)
     except Exception as e:
@@ -44,7 +46,7 @@ def main():
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
-            _ = f.writelines([str(p) for p in paths])
+            _ = f.writelines([str(p) for p in absolute_paths])
             _ = f.write(("#" * 20 + "\n" ))
             _ = f.write("END OF RESOURCES PROCESSED IN THIS RUN")
             _ = f.write(("#" * 20 + "\n" ))
@@ -59,7 +61,7 @@ def main():
     model = InferenceManager(method="hf")
     i = 0
     os.makedirs(EXECUTION_MANIFEST_DIR / "extracted_data", exist_ok=True)
-    for p in paths:
+    for p in absolute_paths:
         results = extract_images(images=[Image.open(p)], schema=str(SCHEMA_PATH), model=model)
         result_path = EXECUTION_MANIFEST_DIR / "extracted_data" / f"{p.split("/")[0].strip(".png")}.json"
         print(f"Saving to {result_path}")
